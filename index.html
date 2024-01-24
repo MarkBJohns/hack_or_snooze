@@ -41,6 +41,7 @@
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
+    <a class="hidden" href="#" id="nav-submit">submit</a>
     <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
   </div>
 </nav>
@@ -96,6 +97,27 @@
     <button type="submit">create account</button>
   </form>
 </section>
+
+<!-- Submit Stories form -->
+  <form action="#"
+        id="submit-form"
+        class="account-form hidden"
+        method="post">
+    <h4>Submit a Story</h4>
+    <div class="login-input">
+      <label for="submit-title">title</label>
+      <input type="text" id="submit-title">
+    </div>
+    <div class="login-input">
+      <label for="submit-author">author</label>
+      <input type="text" id="submit-author">
+    </div>
+    <div class="login-input">
+      <label for="submit-url">url</label>
+      <input type="text" id="submit-url">
+    </div>
+    <button type="submit">submit</button>
+  </form>
 
 <!-- Library JS & our JS -->
 <script src="https://unpkg.com/jquery"></script>

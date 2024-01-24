@@ -2,6 +2,8 @@
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 
+const token=`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBlcHRvQmlzbWFsIiwiaWF0IjoxNzA2MjQ5NDQyfQ.Kv7seJqjJIF_Eq8iJy-CwjfKSW0vB3C-MD0HjDYFqjM`;
+
 /******************************************************************************
  * Story: a single story in the system
  */
@@ -24,8 +26,8 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    const url=new URL(this.url);
+    return url.hostname;
   }
 }
 
@@ -73,8 +75,23 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user,newStory) {
+    const response=await axios({
+      url: `${BASE_URL}/stories`,
+      method: 'POST',
+      data: {
+        token: user.loginToken,
+        story: newStory
+      }
+    });
+
+    const story=new Story(response.data.story);
+
+    this.stories.unshift(story);
+
+    user.ownStories.unshift(story);
+
+    return story
   }
 }
 
@@ -194,3 +211,24 @@ class User {
     }
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function postStory(){
+  const storyURL=`${BASE_URL}/stories`;
+  const data={
+    token: token,
+    story: {
+      author: 'Elie Schoppik',
+      title: 'Four Tips for Moving Faster as a Developer',
+      url: 'https://www.rithmschool.com/blog/developer-productivity'
+    }
+  };
+  try{
+    const response=await axios.post(storyURL,data);
+    console.log(response.data);
+  }catch(error){
+    console.error(error);
+  }
+}
+

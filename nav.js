@@ -25,6 +25,14 @@ function navLoginClick(evt) {
 
 $navLogin.on("click", navLoginClick);
 
+function navSubmitOnClick(e){
+  console.debug('navSubmitOnClick',e);
+  hidePageComponents();
+  $submitForm.show();
+}
+
+$navSubmit.on('click',navSubmitOnClick);
+
 /** When a user first logins in, update the navbar to reflect that. */
 
 function updateNavOnLogin() {
@@ -32,5 +40,6 @@ function updateNavOnLogin() {
   $(".main-nav-links").show();
   $navLogin.hide();
   $navLogOut.show();
+  $navSubmit.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
