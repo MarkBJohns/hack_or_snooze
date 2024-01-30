@@ -19,23 +19,9 @@
 
 /* Individual stories */
 
-.story-link {
-  color: black;
-  font-size: 0.85rem;
-  font-weight: normal;
-  margin: 18px 0;
-}
-
-.story-link:hover {
-  text-decoration: none;
-}
-
-.story-author {
-  margin-left: 2em;
-}
-
-.story-user {
-  display: block;
+.story-container {
+  display: flex;
+  align-items: flex-start;
 }
 
 .story-header {
@@ -43,6 +29,30 @@
   align-items: center;
 }
 
-.favorite-check-false {
-  margin-right: 10px;
+.story-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align the author and username with the title */
 }
+
+.story-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.favorite-check {
+  margin-right: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.story-hostname {
+  margin-left: 10px;
+}
+
+.story-user {
+  margin-left: 0; /* Align with the title */
+  color: orange;
+}
+
