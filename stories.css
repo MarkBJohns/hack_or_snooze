@@ -37,3 +37,12 @@
 .story-user {
   display: block;
 }
+
+.story-header {
+  display: flex;
+  align-items: center;
+}
+
+.favorite-check-false {
+  margin-right: 10px;
+}
