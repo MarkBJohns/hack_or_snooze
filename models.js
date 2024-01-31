@@ -167,10 +167,10 @@ class User {
       method: "POST",
       data: { user: { username, password } },
     });
-
+  
     let { user } = response.data;
-
-    return new User(
+  
+    let loggedInUser = new User(
       {
         username: user.username,
         name: user.name,
@@ -180,6 +180,8 @@ class User {
       },
       response.data.token
     );
+  
+    return loggedInUser;
   }
 
   /** When we already have credentials (token & username) for a user,
@@ -211,6 +213,54 @@ class User {
       return null;
     }
   }
+  async addFavorite(storyId) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
+        method: 'POST',
+        data: {
+          token: this.loginToken
+        }
+      });
+  
+      // Update the user's favorites
+      const story = response.data.user.favorites.find(s => s.storyId === storyId);
+      this.favorites.push(story);
+    } catch (err) {
+      console.error("addFavorite failed", err);
+    }
+  }
+  
+  async removeFavorite(storyId) {
+    try {
+      await axios({
+        url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
+        method: 'DELETE',
+        data: {
+          token: this.loginToken
+        }
+      });
+  
+      // Update the user's favorites
+      this.favorites = this.favorites.filter(s => s.storyId !== storyId);
+    } catch (err) {
+      console.error("removeFavorite failed", err);
+    }
+  }
+  async getFavorites() {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${this.username}`,
+        method: 'GET',
+        params: { token: this.loginToken }
+      });
+  
+      // Update the user's favorites
+      this.favorites = response.data.user.favorites;
+    } catch (err) {
+      console.error("getFavorites failed", err);
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,3 +283,15 @@ async function postStory(){
   }
 }
 
+function updateStars(user) {
+  // Iterate over the user's favorites
+  user.favorites.forEach(favorite => {
+    // Find the li element with the matching id
+    let storyLi = $(`li#${favorite}`);
+
+    // If the li element exists, change the star to black
+    if (storyLi.length > 0) {
+      storyLi.find('.favorite-check').html('★');
+    }
+  });
+}

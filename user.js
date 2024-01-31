@@ -118,31 +118,52 @@ function updateUIOnUserLogin() {
   updateNavOnLogin();
 }
 
-$(document).ready(function(){
-  if(!localStorage.getItem('favorites')){
-    localStorage.setItem('favorites',JSON.stringify({}));
-  }
+// $(document).ready(function(){
+//   if(!localStorage.getItem('favorites')){
+//     localStorage.setItem('favorites',JSON.stringify({}));
+//   }
 
-  $('.favorite-check').on('click', selectFavorites);
-})
+//   // Use event delegation to attach the event listener
+//   $('body').on('click', '.favorite-check', selectFavorites);
+// })
 
-function selectFavorites() {
-  let favorites=JSON.parse(localStorage.getItem('favorites'));
-  let username=localStorage.getItem('username');
+// function selectFavorites() {
 
-  if(!favorites[username]){
-    favorites[username]=[];
-  }
+//   let favorites=JSON.parse(localStorage.getItem('favorites'));
 
-  let storyLink=$(this).parent().find('.story-link').text();
+//   let username=localStorage.getItem('username');
+
+//   if(!favorites[username]){
+//     favorites[username]=[];
+//   }
+
+//   let storyLink=$(this).parent().find('.story-link').text();
+
+//   if($(this).html()===`☆`){
+//     $(this).html(`★`).attr('title','Remove from Favorites');
+//     favorites[username].push(storyLink);
+//   }else{
+//     $(this).html(`☆`).attr('title','Add to Favorites');
+//     favorites[username]=favorites[username].filter(favorite=>favorite!==storyLink);
+//   }
+
+//   localStorage.setItem('favorites', JSON.stringify(favorites));
+// }
+
+async function selectFavorites() {
+  let storyId = $(this).closest('li').attr('id');
+  let user = currentUser;
 
   if($(this).html()===`☆`){
     $(this).html(`★`).attr('title','Remove from Favorites');
-    favorites[username].push(storyLink);
+    await user.addFavorite(storyId);
   }else{
     $(this).html(`☆`).attr('title','Add to Favorites');
-    favorites[username]=favorites[username].filter(favorite=>favorite!==storyLink);
+    await user.removeFavorite(storyId);
   }
-
-  localStorage.setItem('favorites', JSON.stringify(favorites));
 }
+
+$(document).ready(function(){
+  $('body').on('click', '.favorite-check', selectFavorites);
+})
+
