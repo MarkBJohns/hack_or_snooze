@@ -21,20 +21,13 @@ class Story {
     this.url = url;
     this.username = username;
     this.createdAt = createdAt;
-    this.favorite = new Set();
   }
 
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    const url=new URL(this.url);
-    return url.hostname;
-  }
-  
-  toggleFavorite(username) {
-    this.favorite.has(username)
-      ? this.favorite.delete(username)
-      : this.favorite.add(username);
+    // UNIMPLEMENTED: complete this function!
+    return "hostname.com";
   }
 }
 
@@ -74,22 +67,6 @@ class StoryList {
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
   }
-  
-  static async getFavorites() {
-    // Filters all the stories on the page into just the stories that are favorited
-    //  by the current user.
-    const storyList = await StoryList.getStories();
-    
-    if (!currentUser || !currentUser.favorites) {
-      return [];
-    }
-    
-    const favoriteStories = storyList.stories.filter(story => 
-      currentUser.favorites.some(favStory => favStory.storyId === story.storyId)
-    );
-    
-    return favoriteStories;
-  }
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
    * - user - the current instance of User who will post the story
@@ -98,8 +75,8 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory(user,newStory) {
-    const response=await axios({
+  async addStory(user, newStory) {
+    const response = await axios({
       url: `${BASE_URL}/stories`,
       method: 'POST',
       data: {
@@ -107,16 +84,15 @@ class StoryList {
         story: newStory
       }
     });
-
-    const story=new Story(response.data.story);
-
+    
+    const story = new Story(response.data.story);
+    
     this.stories.unshift(story);
-
+    
     user.ownStories.unshift(story);
-
+    
     return story
   }
-  
 }
 
 
@@ -190,10 +166,10 @@ class User {
       method: "POST",
       data: { user: { username, password } },
     });
-  
+
     let { user } = response.data;
-  
-    let loggedInUser = new User(
+
+    return new User(
       {
         username: user.username,
         name: user.name,
@@ -203,8 +179,6 @@ class User {
       },
       response.data.token
     );
-  
-    return loggedInUser;
   }
 
   /** When we already have credentials (token & username) for a user,
@@ -236,72 +210,5 @@ class User {
       return null;
     }
   }
-  async addFavorite(storyId) {
-    try {
-      const response = await axios({
-        url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
-        method: 'POST',
-        data: {
-          token: this.loginToken
-        }
-      });
-  
-      // Update the user's favorites
-      const story = response.data.user.favorites.find(s => s.storyId === storyId);
-      this.favorites.push(story);
-    } catch (err) {
-      console.error("addFavorite failed", err);
-    }
-  }
-  
-  async removeFavorite(storyId) {
-    try {
-      await axios({
-        url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
-        method: 'DELETE',
-        data: {
-          token: this.loginToken
-        }
-      });
-  
-      // Update the user's favorites
-      this.favorites = this.favorites.filter(s => s.storyId !== storyId);
-    } catch (err) {
-      console.error("removeFavorite failed", err);
-    }
-  }
-  async getFavorites() {
-    try {
-      const response = await axios({
-        url: `${BASE_URL}/users/${this.username}`,
-        method: 'GET',
-        params: { token: this.loginToken }
-      });
-  
-      // Update the user's favorites
-      this.favorites = response.data.user.favorites;
-    } catch (err) {
-      console.error("getFavorites failed", err);
-    }
-  }
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-async function postStory(){
-  const storyURL=`${BASE_URL}/stories`;
-  const data={
-    token: token,
-    story: {
-      author: 'Elie Schoppik',
-      title: 'Four Tips for Moving Faster as a Developer',
-      url: 'https://www.rithmschool.com/blog/developer-productivity'
-    }
-  };
-  try{
-    const response=await axios.post(storyURL,data);
-    console.log(response.data);
-  }catch(error){
-    console.error(error);
-  }
-}
+ 

@@ -27,7 +27,7 @@ async function login(evt) {
   updateUIOnUserLogin();
 }
 
-$loginForm.on("submit", login); 
+$loginForm.on("submit", login);
 
 /** Handle signup form submission. */
 
@@ -112,42 +112,5 @@ function updateUIOnUserLogin() {
 
   $allStoriesList.show();
 
-  $loginForm.hide();
-  $signupForm.hide();
-
   updateNavOnLogin();
 }
-
-// $(document).ready(function(){
-//   if(!localStorage.getItem('favorites')){
-//     localStorage.setItem('favorites',JSON.stringify({}));
-//   }
-
-//   // Use event delegation to attach the event listener
-//   $('body').on('click', '.favorite-check', selectFavorites);
-// })
-
-// function selectFavorites() {
-
-//   let favorites=JSON.parse(localStorage.getItem('favorites'));
-
-//   let username=localStorage.getItem('username');
-
-//   if(!favorites[username]){
-//     favorites[username]=[];
-//   }
-
-//   let storyLink=$(this).parent().find('.story-link').text();
-
-//   if($(this).html()===`☆`){
-//     $(this).html(`★`).attr('title','Remove from Favorites');
-//     favorites[username].push(storyLink);
-//   }else{
-//     $(this).html(`☆`).attr('title','Add to Favorites');
-//     favorites[username]=favorites[username].filter(favorite=>favorite!==storyLink);
-//   }
-
-//   localStorage.setItem('favorites', JSON.stringify(favorites));
-// }
-
-

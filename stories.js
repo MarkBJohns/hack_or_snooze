@@ -56,7 +56,7 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
-}
+} 
 
 async function submitStory(e){
   e.preventDefault();
@@ -72,4 +72,55 @@ async function submitStory(e){
   hidePageComponents();
   $allStoriesList.show();
 }
-$submitForm.on('submit',submitStory);
+$submitForm.on('submit', submitStory);
+
+// *********************************************************************
+//  FIRST ATTEMPT
+
+async function selectFavorites() {
+  let storyId = $(this).closest('li').attr('id');
+  let user = currentUser;
+
+  if($(this).html()===`☆`){
+    $(this).html(`★`).attr('title','Remove from Favorites');
+    await user.addFavorite(storyId);
+  }else{
+    $(this).html(`☆`).attr('title','Add to Favorites');
+    await user.removeFavorite(storyId);
+  }
+}
+
+$(document).ready(function(){
+  $('body').on('click', '.favorite-check', selectFavorites);
+})
+
+// *********************************************************************
+//  SECOND ATTEMPT
+
+// function selectFavorites() {
+//   $('#all-stories-list').on('click', 'favorite-check', async function (e) {
+//     const $target = $(e.target);
+//     const storyId = $target.closest('li').attr('id');
+//     const story = storyList.stories.find(s => s.storyId === storyId);
+//     if (story.favorite) {
+//       await currentUser.removeFavorite(storyId);
+//       story.favorite = false;
+//       $target.text('☆');
+//     } else {
+//       await currentUser.addFavorite(storyId);
+//       story.favorite = true;
+//       $target.text('★');
+//     }
+//   });
+// }
+
+// $(async function () {
+//   await checkIfLoggedIn();
+  
+//   if (currentUser) {
+//     await getAndShowStoriesOnStart();
+//     selectFavorites();
+//   }
+  
+//   $submitForm.on('submit', submitStory);
+// });
